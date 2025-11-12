@@ -1,0 +1,1 @@
+thermostat_name = "Hall"

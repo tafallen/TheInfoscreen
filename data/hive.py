@@ -7,7 +7,7 @@ import settings
 
 requests_cache.install_cache(cache_name='hive_api', backend='sqlite', expire_after=60)
 
-def get_hive_sessionId():
+def get_hive_sessionId(requests_module=requests):
     payload = "{\r\n    \"sessions\": [{\r\n        \"username\": \"" + apis.username + "\",\r\n        \"password\": \"" + apis.password + "\",\r\n        \"caller\": \"WEB\"\r\n    }]\r\n}"
     headers = {
         'Content-Type': "application/json",
@@ -22,12 +22,12 @@ def get_hive_sessionId():
         'cache-control': "no-cache"
         }
 
-    response = requests.request("POST", apis.hive_login_url, data=payload, headers=headers)
+    response = requests_module.request("POST", apis.hive_login_url, data=payload, headers=headers)
 
     login_data = json.loads(response.text)
     return login_data['sessions'][0]['sessionId'] 
 
-def get_hive_nodes(sessionId):
+def get_hive_nodes(sessionId, requests_module=requests):
 
     url = "https://api.prod.bgchprod.info:443/omnia/nodes"
 
@@ -44,12 +44,12 @@ def get_hive_nodes(sessionId):
         'cache-control': "no-cache"
         }
 
-    response = requests.request("GET", url, headers=headers)
+    response = requests_module.request("GET", url, headers=headers)
     return json.loads(response.text)
 
-def get_heating_state():
-    sessionId = get_hive_sessionId()
-    nodes = get_hive_nodes(sessionId)
+def get_heating_state(session_id_provider=get_hive_sessionId, nodes_provider=get_hive_nodes):
+    sessionId = session_id_provider()
+    nodes = nodes_provider(sessionId)
     
     thermo = [x for x in nodes['nodes'] if x['name'] == settings.thermostat_name][0]
 
