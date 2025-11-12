@@ -17,9 +17,9 @@ def get_cache_timestamp(filename):
         print('weather: cache didn\'t exist')
         return datetime.datetime(2010,1,1) 
 
-def update_weather_cache(filename):
+def update_weather_cache(filename, requests_module=requests):
     print('weather: Updating cache')
-    response = requests.get(apis.accuweather_api_url)
+    response = requests_module.get(apis.accuweather_api_url)
     if response.status_code == 200:
         document = json.loads(response.content.decode('utf-8'))
         with open(filename, 'w') as outfile:
@@ -28,12 +28,12 @@ def update_weather_cache(filename):
         return
     print('weather: cache update fail = ' + str(response.status_code))
 
-def get_weather_data():
+def get_weather_data(requests_module=requests):
     filename = "./cache/weather.json"
     cache_time = get_cache_timestamp(filename)
 
     if cache_time < (datetime.datetime.now() - datetime.timedelta(hours=1)):
-        update_weather_cache(filename)
+        update_weather_cache(filename, requests_module)
 
     print('weather: loading from file...')
     if os.path.exists(filename):
@@ -43,8 +43,8 @@ def get_weather_data():
     print('weather: loading from file... FAILED')
     return None
     
-def get_weather():
-    weather_json = get_weather_data()
+def get_weather(weather_data_provider=get_weather_data):
+    weather_json = weather_data_provider()
     if weather_json == None or weather_json == '503':
         print('weather: No forecast')
         return []

@@ -1,0 +1,8 @@
+accuweather_api_url = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/329725"
+news_key = "test_key"
+username = "test_user"
+password = "test_password"
+hive_login_url = "https://api.prod.bgchprod.info:443/omnia/auth/sessions"
+sunset_api_url = "https://api.sunrise-sunset.org/json?lat=51.5074&lng=0.1278&formatted=0"
+darwin_api_url = "https://lite.realtime.nationalrail.co.uk/OpenLDBWS/wsdl.aspx?ver=2021-11-01"
+darwin_api_key = "test_key"

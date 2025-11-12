@@ -6,12 +6,12 @@ import infologging as log
 def get_client():
     return NewsApiClient(api_key=apis.news_key)
 
-def get_headlines():
-    return get_client().get_top_headlines(sources='bbc-news')
+def get_headlines(news_client=get_client()):
+    return news_client.get_top_headlines(sources='bbc-news')
 
-def get_news():
+def get_news(headlines_provider=get_headlines):
     log.log_message('news: Getting news')
-    headlines = get_headlines()
+    headlines = headlines_provider()
 
     articleCount = headlines['totalResults']
     result = []
