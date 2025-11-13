@@ -111,3 +111,4 @@ data/apis.py
 hive_api.sqlite
 cache/*.json
 epaper.py
+apis.py
